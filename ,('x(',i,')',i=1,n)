@@ -1,0 +1,80 @@
+        implicit none
+        integer i,j,n,k,count,e
+        real    a(100,100),c(100),x(100),old,su,s,dummy,ea,er
+        er=0.0000001
+        open(14,file='seidal')
+        print*,'Enter the number of rows'
+        write(14,*)'Enter the number of rows'
+        read*,n
+        write(14,*)n
+   1    print*,'Enter the coefficients of variables'
+        write(14,*)'Enter the coefficients of vsriables'
+        do 2 i=1,n
+        read*,(a(i,j),j=1,n)
+        write(14,*)(a(i,j),j=1,n)
+   2    continue
+        print*,'Enter the constants of equations'
+        write(14,*)'Enter the constants of equations'
+        read*,(c(i),i=1,n)
+        write(14,*)(c(i),i=1,n)
+        print*,'Enter the approximate values of variables'
+        write(14,*)'Enter the approximate values of variables'
+        read*,(x(i),i=1,n)
+        write(14,*)(x(i),i=1,n)
+        do 3 i=1,n
+        s=0
+        do 4 j=1,n
+        if(i.ne.j)s=s+abs(a(i,j))
+  4     continue
+        if(abs(a(i,j).lt.s))then
+        Print*,'There is no diogonal dominance'
+        write(14,*)'there is no diogonal dominance'
+        print*,'Try with another value'
+        write(14,*)'There is nopo dioginal dominance'
+        goto 1
+        endif
+  3     continue
+        do i=1,n
+        dummy=a(i,i)
+        Do j=1,n
+        a(i,j)=a(i,j)/dummy
+        enddo
+        c(i)=c(i)/dummy
+        end do
+        count=0
+        Print*,('x(',i,')',i=1,n)
+        write(14,*)('x(',i,')',i=1,n)
+  8    do i=1,n
+        k=1
+        old=x(i)
+        su=c(i)
+        do j=1,n
+        if(i.ne.j)then
+        su=su-a(i,j)*x(j)
+        endif
+        enddo
+        x(i)=su
+        print*,(x(j),j=1,n)
+        write(14,*)(x(j),j=1,n)
+        ea=abs(old-x(i))
+        if(ea.gt.er)k=0
+        enddo
+        count=count+1
+        if(k.eq.0)goto 8
+        print*,'the solution is'
+        write(14,*)'the solution is'
+        do i=1,n
+        print*,(x(i))
+        write(14,*)(x(i))
+        enddo
+        print*,'Number of iterations =',count
+        write(14,*)'Number of iterations =',count
+        Print*,'If you want to continue press 1 otherwise 0'
+        write(14,*)'If you want to continue press 1 otherwise 0'
+        read*,e
+        if(e.eq.1)goto 1
+        close(14)
+        stop
+        end
+
+        
